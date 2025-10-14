@@ -29,6 +29,8 @@ import com.example.lindonndelivery2.ui.tracking.TrackingScreen
 import com.example.lindonndelivery2.ui.theme.LinDonnDelivery2Theme
 import com.example.lindonndelivery2.ui.profile.ProfileScreen
 
+// App entry point. Hosts simple in-app navigation using a sealed Screen and a Compose Scaffold
+// with a bottom NavigationBar. We keep navigation state in memory for this demo.
 sealed class Screen {
     data object Restaurants: Screen()
     data class Menu(val id: String, val name: String): Screen()
@@ -44,27 +46,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LinDonnDelivery2Theme {
-                var authed by remember { mutableStateOf(false) }
-                var screen by remember { mutableStateOf<Screen>(Screen.Restaurants) }
+                var authed by remember { mutableStateOf(false) } // toggled after login
+                var screen by remember { mutableStateOf<Screen>(Screen.Restaurants) } // current route
 
                 if (!authed) {
                     LoginScreen(onSuccess = { authed = true })
                 } else {
+                    // Scaffold provides the bottom navigation bar and applies content padding
                     Scaffold(
                         bottomBar = {
                             NavigationBar {
+                                // Home tab: covers Restaurants and Menu
                                 NavigationBarItem(
                                     selected = screen is Screen.Restaurants || screen is Screen.Menu,
                                     onClick = { screen = Screen.Restaurants },
                                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                                     label = { Text("Home") }
                                 )
+                                // Cart tab: covers Cart and Checkout
                                 NavigationBarItem(
                                     selected = screen is Screen.Cart || screen is Screen.Checkout,
                                     onClick = { screen = Screen.Cart },
                                     icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
                                     label = { Text("Cart") }
                                 )
+                                // Profile tab
                                 NavigationBarItem(
                                     selected = screen is Screen.Profile,
                                     onClick = { screen = Screen.Profile },
@@ -74,29 +80,30 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) { innerPadding ->
+                        // Apply inner padding so content doesn't sit under the bottom bar
                         Box(Modifier.padding(innerPadding)) {
                             when (val s = screen) {
-                            is Screen.Restaurants -> RestaurantsScreen(onRestaurantClick = { r ->
-                                screen = Screen.Menu(r.id, r.name)
-                            })
-                            is Screen.Menu -> MenuScreen(
-                                restaurantId = s.id,
-                                restaurantName = s.name,
-                                onBack = { screen = Screen.Restaurants },
-                                onViewCart = { screen = Screen.Cart }
-                            )
-                            is Screen.Cart -> CartScreen(
-                                onBack = { screen = Screen.Restaurants },
-                                onCheckout = { screen = Screen.Checkout }
-                            )
-                            is Screen.Checkout -> CheckoutScreen(
-                                onBack = { screen = Screen.Cart },
-                                onOrderPlaced = { orderId -> screen = Screen.Tracking(orderId) }
-                            )
-                            is Screen.Tracking -> TrackingScreen(orderId = s.orderId) {
-                                screen = Screen.Restaurants
-                            }
-                            is Screen.Profile -> ProfileScreen()
+                                is Screen.Restaurants -> RestaurantsScreen(onRestaurantClick = { r ->
+                                    screen = Screen.Menu(r.id, r.name)
+                                })
+                                is Screen.Menu -> MenuScreen(
+                                    restaurantId = s.id,
+                                    restaurantName = s.name,
+                                    onBack = { screen = Screen.Restaurants },
+                                    onViewCart = { screen = Screen.Cart }
+                                )
+                                is Screen.Cart -> CartScreen(
+                                    onBack = { screen = Screen.Restaurants },
+                                    onCheckout = { screen = Screen.Checkout }
+                                )
+                                is Screen.Checkout -> CheckoutScreen(
+                                    onBack = { screen = Screen.Cart },
+                                    onOrderPlaced = { orderId -> screen = Screen.Tracking(orderId) }
+                                )
+                                is Screen.Tracking -> TrackingScreen(orderId = s.orderId) {
+                                    screen = Screen.Restaurants
+                                }
+                                is Screen.Profile -> ProfileScreen()
                             }
                         }
                     }
