@@ -8,6 +8,7 @@ import com.example.lindonndelivery2.ui.theme.Grey700
 import com.example.lindonndelivery2.ui.theme.RustOrange
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.lindonndelivery2.data.SessionManager
 import com.example.lindonndelivery2.data.cart.CartStore
@@ -15,6 +16,8 @@ import com.example.lindonndelivery2.data.model.OrderCreate
 import com.example.lindonndelivery2.data.model.OrderItem
 import com.example.lindonndelivery2.data.network.ApiClient
 import com.example.lindonndelivery2.data.network.OrdersService
+import com.example.lindonndelivery2.util.LocalizedStrings
+import com.example.lindonndelivery2.util.NotificationHelper
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -39,14 +42,15 @@ fun CheckoutScreen(
 
     val scope = rememberCoroutineScope()
     val orders = remember { ApiClient.rest.create(OrdersService::class.java) }
+    val context = LocalContext.current
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Checkout", style = MaterialTheme.typography.headlineMedium)
+        Text(context.getString(com.example.lindonndelivery2.R.string.checkout), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(12.dp))
         OutlinedTextField(
             value = address,
             onValueChange = { address = it },
-            label = { Text("Delivery address") },
+            label = { Text(context.getString(com.example.lindonndelivery2.R.string.delivery_address)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
@@ -64,7 +68,7 @@ fun CheckoutScreen(
         OutlinedTextField(
             value = promo,
             onValueChange = { promo = it },
-            label = { Text("Promo code (SAVE10 / LESS20)") },
+            label = { Text(context.getString(com.example.lindonndelivery2.R.string.promo_code)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
@@ -80,22 +84,24 @@ fun CheckoutScreen(
         )
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            val selected = if (payingWithWallet) "Wallet" else "Card"
-            OutlinedButton(onClick = { payingWithWallet = true }, enabled = !payingWithWallet) { Text("Wallet") }
-            OutlinedButton(onClick = { payingWithWallet = false }, enabled = payingWithWallet) { Text("Card") }
-            Text("$selected", style = MaterialTheme.typography.bodyMedium)
+            val walletStr = context.getString(com.example.lindonndelivery2.R.string.wallet)
+            val cardStr = context.getString(com.example.lindonndelivery2.R.string.card)
+            val selected = if (payingWithWallet) walletStr else cardStr
+            OutlinedButton(onClick = { payingWithWallet = true }, enabled = !payingWithWallet) { Text(walletStr) }
+            OutlinedButton(onClick = { payingWithWallet = false }, enabled = payingWithWallet) { Text(cardStr) }
+            Text(selected, style = MaterialTheme.typography.bodyMedium)
         }
         Spacer(Modifier.height(12.dp))
-        Text("Subtotal: R${String.format("%.2f", subtotal)}")
-        Text("Discount: -R${String.format("%.2f", discount)}")
-        Text("Total: R${String.format("%.2f", total)}", style = MaterialTheme.typography.titleMedium)
+        Text(context.getString(com.example.lindonndelivery2.R.string.subtotal, String.format("%.2f", subtotal)))
+        Text(context.getString(com.example.lindonndelivery2.R.string.discount, String.format("%.2f", discount)))
+        Text(context.getString(com.example.lindonndelivery2.R.string.total, String.format("%.2f", total)), style = MaterialTheme.typography.titleMedium)
         if (error != null) {
             Spacer(Modifier.height(8.dp))
             Text(error!!, color = MaterialTheme.colorScheme.error)
         }
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = onBack) { Text("Back") }
+            OutlinedButton(onClick = onBack) { Text(context.getString(com.example.lindonndelivery2.R.string.back)) }
             Button(
                 onClick = {
                     scope.launch {
@@ -127,7 +133,15 @@ fun CheckoutScreen(
                             val inserted = created.firstOrNull() ?: throw IllegalStateException("No order returned")
                             android.util.Log.d("CheckoutScreen", "Order created successfully: ${inserted.id}")
                             
-                            // Verify FCM token is stored (notification trigger will use it)
+                            // Show immediate local notification
+                            NotificationHelper.showNotification(
+                                context = context,
+                                title = context.getString(com.example.lindonndelivery2.R.string.order_confirmation),
+                                message = context.getString(com.example.lindonndelivery2.R.string.order_confirmed_message),
+                                orderId = inserted.id
+                            )
+                            
+                            // Verify FCM token is stored (server-side notification trigger will use it)
                             com.example.lindonndelivery2.data.notifications.FcmTokenManager.getAndStoreToken()
                             
                             CartStore.clear()
@@ -146,7 +160,7 @@ fun CheckoutScreen(
                     }
                 },
                 enabled = !placing && CartStore.lines.isNotEmpty()
-            ) { Text(if (placing) "Placing..." else "Place Order") }
+            ) { Text(if (placing) context.getString(com.example.lindonndelivery2.R.string.placing) else context.getString(com.example.lindonndelivery2.R.string.place_order)) }
         }
     }
 }

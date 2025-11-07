@@ -234,92 +234,146 @@ fun LoginScreen(onSuccess: () -> Unit) {
                             error = null
                             try {
                                 val email = acct.email ?: throw IllegalStateException("No email from Google account")
+                                android.util.Log.d("LoginScreen", "Google Sign-In successful for email: $email")
                                 
-                                // For Google Sign-In, we'll create a user account with a generated password
-                                // and then sign them in. This is a workaround since Supabase OAuth requires backend setup.
-                                // In production, you should use Supabase's OAuth provider.
+                                // For Google Sign-In, we use a deterministic password based on Google ID
+                                // This ensures the same password is used each time for the same Google account
+                                // The password is derived from the Google account ID, making it consistent
+                                val googleId = acct.id ?: email
+                                val tempPassword = "GoogleAuth_${googleId.hashCode().toString().replace("-", "N")}_${email.hashCode()}"
                                 
                                 // Try to sign in first (user might already exist)
+                                android.util.Log.d("LoginScreen", "Attempting to sign in existing user...")
                                 try {
-                                    // Generate a password for Google users (they won't need it, but Supabase requires it)
-                                    // We use a hashed version of their email + a secret as password
-                                    val tempPassword = "google_${email.hashCode()}_${acct.id}"
                                     val loginRes = auth.signIn(body = EmailPasswordBody(email, tempPassword))
                                     
                                     if (!loginRes.access_token.isNullOrBlank()) {
-                                        // User exists, sign in successful
+                                        android.util.Log.d("LoginScreen", "Sign in successful for existing user")
                                         SessionManager.setFromToken(loginRes.access_token!!)
                                         SessionManager.userId?.let { uid ->
-                                            try { users.upsert(listOf(UserRow(id = uid, email = email))) } catch (_: Throwable) {}
+                                            try { 
+                                                users.upsert(listOf(UserRow(id = uid, email = email))) 
+                                                android.util.Log.d("LoginScreen", "User record updated in database")
+                                            } catch (e: Throwable) {
+                                                android.util.Log.e("LoginScreen", "Failed to update user record", e)
+                                            }
                                         }
                                         FcmTokenManager.getAndStoreToken()
+                                        loading = false
                                         onSuccess()
                                         return@launch
                                     }
-                                } catch (e: Throwable) {
-                                    // User doesn't exist, create account
-                                    // Generate a secure password for Google-authenticated users
-                                    val tempPassword = "Google${email.hashCode()}${System.currentTimeMillis()}"
+                                } catch (loginError: Throwable) {
+                                    android.util.Log.d("LoginScreen", "Login failed (user may not exist): ${loginError.message}")
+                                    // User doesn't exist, try to create account
+                                }
+                                
+                                // User doesn't exist, create account
+                                android.util.Log.d("LoginScreen", "Creating new account for Google user...")
+                                try {
+                                    val signUpRes = auth.signUp(EmailPasswordBody(email, tempPassword))
+                                    android.util.Log.d("LoginScreen", "Sign up response received")
                                     
-                                    try {
-                                        // Try to create account
-                                        val signUpRes = auth.signUp(EmailPasswordBody(email, tempPassword))
-                                        
-                                        if (signUpRes.access_token != null && signUpRes.access_token.isNotBlank()) {
-                                            // Account created and signed in
-                                            SessionManager.setFromToken(signUpRes.access_token)
-                                            SessionManager.userId?.let { uid ->
-                                                try { users.upsert(listOf(UserRow(id = uid, email = email))) } catch (_: Throwable) {}
-                                            }
-                                            FcmTokenManager.getAndStoreToken()
-                                            onSuccess()
-                                        } else {
-                                            // Need to sign in after signup
-                                            delay(500)
-                                            val loginRes = auth.signIn(body = EmailPasswordBody(email, tempPassword))
-                                            if (!loginRes.access_token.isNullOrBlank()) {
-                                                SessionManager.setFromToken(loginRes.access_token!!)
-                                                SessionManager.userId?.let { uid ->
-                                                    try { users.upsert(listOf(UserRow(id = uid, email = email))) } catch (_: Throwable) {}
-                                                }
-                                                FcmTokenManager.getAndStoreToken()
-                                                onSuccess()
-                                            } else {
-                                                error = "Failed to sign in with Google. Please try email/password signup."
+                                    if (signUpRes.access_token != null && signUpRes.access_token.isNotBlank()) {
+                                        // Account created and signed in immediately
+                                        android.util.Log.d("LoginScreen", "Account created and signed in")
+                                        SessionManager.setFromToken(signUpRes.access_token)
+                                        SessionManager.userId?.let { uid ->
+                                            try { 
+                                                users.upsert(listOf(UserRow(id = uid, email = email))) 
+                                                android.util.Log.d("LoginScreen", "User record created in database")
+                                            } catch (e: Throwable) {
+                                                android.util.Log.e("LoginScreen", "Failed to create user record", e)
                                             }
                                         }
-                                    } catch (signUpError: Throwable) {
-                                        error = "Failed to create account: ${signUpError.message}. Please try email/password signup."
+                                        FcmTokenManager.getAndStoreToken()
+                                        loading = false
+                                        onSuccess()
+                                        return@launch
+                                    } else {
+                                        // Signup successful but email confirmation might be required
+                                        // Try to sign in after a short delay
+                                        android.util.Log.d("LoginScreen", "Signup completed, attempting to sign in...")
+                                        delay(1000)
+                                        try {
+                                            val loginRes = auth.signIn(body = EmailPasswordBody(email, tempPassword))
+                                            if (!loginRes.access_token.isNullOrBlank()) {
+                                                android.util.Log.d("LoginScreen", "Sign in successful after signup")
+                                                SessionManager.setFromToken(loginRes.access_token!!)
+                                                SessionManager.userId?.let { uid ->
+                                                    try { 
+                                                        users.upsert(listOf(UserRow(id = uid, email = email))) 
+                                                    } catch (_: Throwable) {}
+                                                }
+                                                FcmTokenManager.getAndStoreToken()
+                                                loading = false
+                                                onSuccess()
+                                                return@launch
+                                            }
+                                        } catch (loginAfterSignupError: Throwable) {
+                                            android.util.Log.e("LoginScreen", "Failed to sign in after signup", loginAfterSignupError)
+                                            error = "Account created! Please check your email to confirm, then sign in with email/password."
+                                            loading = false
+                                            return@launch
+                                        }
+                                    }
+                                } catch (signUpError: Throwable) {
+                                    android.util.Log.e("LoginScreen", "Sign up failed", signUpError)
+                                    val errorMsg = signUpError.message ?: "Unknown error"
+                                    error = when {
+                                        errorMsg.contains("already registered", ignoreCase = true) -> {
+                                            // User exists but password doesn't match - try to sign in with a different approach
+                                            android.util.Log.d("LoginScreen", "User already registered, attempting alternative sign in...")
+                                            "Google account already registered. Please sign in with email/password or use a different Google account."
+                                        }
+                                        errorMsg.contains("400") -> {
+                                            "Invalid email or password format. Please try email/password signup."
+                                        }
+                                        else -> "Failed to create account: $errorMsg. Please try email/password signup."
                                     }
                                 }
                             } catch (t: Throwable) {
-                                error = "Google Sign-In error: ${t.message}"
+                                android.util.Log.e("LoginScreen", "Google Sign-In error", t)
+                                error = "Google Sign-In error: ${t.message ?: "Unknown error"}"
                             } finally {
                                 loading = false
                             }
                         }
+                    } ?: run {
+                        error = "Failed to get Google account information"
                     }
                 } catch (e: ApiException) {
+                    android.util.Log.e("LoginScreen", "Google Sign-In API exception", e)
+                    loading = false
                     error = when (e.statusCode) {
                         12501 -> "Google Sign-In was cancelled"
-                        10 -> "Google Sign-In failed: Developer error. Check configuration."
+                        10 -> "Google Sign-In failed: Developer error. Please check Google configuration."
+                        7 -> "Google Sign-In failed: Network error. Please check your connection."
                         else -> "Google Sign-In failed: ${e.message} (Code: ${e.statusCode})"
                     }
                 }
             } else {
-                error = "Google Sign-In cancelled or failed"
+                loading = false
+                android.util.Log.d("LoginScreen", "Google Sign-In result not OK: ${result.resultCode}")
+                // Don't show error for user cancellation (resultCode != RESULT_OK is normal if user cancels)
             }
         }
         
         OutlinedButton(
             onClick = {
-                val signInIntent = googleSignInHelper.signInClient.signInIntent
-                googleSignInLauncher.launch(signInIntent)
+                android.util.Log.d("LoginScreen", "Google Sign-In button clicked")
+                try {
+                    val signInIntent = googleSignInHelper.signInClient.signInIntent
+                    googleSignInLauncher.launch(signInIntent)
+                } catch (e: Exception) {
+                    android.util.Log.e("LoginScreen", "Failed to launch Google Sign-In", e)
+                    error = "Failed to start Google Sign-In: ${e.message}"
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = !loading
         ) {
-            Text("Sign in / Sign up with Google")
+            Text(context.getString(com.example.lindonndelivery2.R.string.sign_in_with_google))
         }
     }
 }

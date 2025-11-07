@@ -25,5 +25,37 @@
     <string name="offline">Akukho intanethi</string>
     <string name="online">Ku-intanethi</string>
     <string name="sync">Hlanganisa</string>
+    <string name="search_restaurants">Sesha izindawo zokudlela noma ukudla</string>
+    <string name="delivery_address">Ikheli lokulethwa</string>
+    <string name="promo_code">Ikhodi ye-promo (SAVE10 / LESS20)</string>
+    <string name="wallet">Isikhwama</string>
+    <string name="card">Ikhadi</string>
+    <string name="subtotal">Isamba esincane: R%1$s</string>
+    <string name="discount">Isaphulelo: -R%1$s</string>
+    <string name="total">Isamba: R%1$s</string>
+    <string name="place_order">Faka i-oda</string>
+    <string name="placing">Iyafaka…</string>
+    <string name="back">Emuva</string>
+    <string name="cart_empty">Inqola yakho ayinalutho</string>
+    <string name="proceed_to_checkout">Qhubeka uye ekukhokheni</string>
+    <string name="delivery">Ukulethwa: R%1$s</string>
+    <string name="order_tracking">Ukulandelela Kwe-oda</string>
+    <string name="status">Isimo: %1$s</string>
+    <string name="steps">Izinyathelo:</string>
+    <string name="confirmed">Kuqinisekisiwe</string>
+    <string name="preparing">Iyayilungisa</string>
+    <string name="out_for_delivery">Iphumile ukuletha</string>
+    <string name="delivered">Ilethelwe</string>
+    <string name="account_details">Imininingwane Ye-akhawunti</string>
+    <string name="default_address">Ikheli elivamile</string>
+    <string name="push_notifications">Izaziso ezisusa</string>
+    <string name="marketing_emails">Ama-imeyili okukhangisa</string>
+    <string name="saved">Kugciniwe</string>
+    <string name="loyalty_points">Amaphuzu Okuqiniseka: %1$d</string>
+    <string name="wallet_balance">Ibhalansi Yesikhwama: R%1$s</string>
+    <string name="open_settings">Vula Izilungiselelo</string>
+    <string name="sign_out">Phuma</string>
+    <string name="order_confirmation">I-oda Iyaqinisekiswa</string>
+    <string name="order_confirmed_message">I-oda yakho ifakiwe ngempumelelo!</string>
 </resources>
 

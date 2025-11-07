@@ -25,5 +25,37 @@
     <string name="offline">Vanlyn</string>
     <string name="online">Aanlyn</string>
     <string name="sync">Sinkroniseer</string>
+    <string name="search_restaurants">Soek restaurante of kookkuns</string>
+    <string name="delivery_address">Afleweringsadres</string>
+    <string name="promo_code">Promo kode (SAVE10 / LESS20)</string>
+    <string name="wallet">Beursie</string>
+    <string name="card">Kaart</string>
+    <string name="subtotal">Subtotaal: R%1$s</string>
+    <string name="discount">Afslag: -R%1$s</string>
+    <string name="total">Totaal: R%1$s</string>
+    <string name="place_order">Plaas Bestelling</string>
+    <string name="placing">Plaas…</string>
+    <string name="back">Terug</string>
+    <string name="cart_empty">Jou mandjie is leeg</string>
+    <string name="proceed_to_checkout">Gaan na Betaal</string>
+    <string name="delivery">Aflewering: R%1$s</string>
+    <string name="order_tracking">Bestelling Volging</string>
+    <string name="status">Status: %1$s</string>
+    <string name="steps">Stappe:</string>
+    <string name="confirmed">Bevestig</string>
+    <string name="preparing">Berei voor</string>
+    <string name="out_for_delivery">Onderweg vir Aflewering</string>
+    <string name="delivered">Afgelewer</string>
+    <string name="account_details">Rekening Besonderhede</string>
+    <string name="default_address">Verstek Adres</string>
+    <string name="push_notifications">Stoot kennisgewings</string>
+    <string name="marketing_emails">Bemarkings e-posse</string>
+    <string name="saved">Gestoor</string>
+    <string name="loyalty_points">Lojaliteits Punte: %1$d</string>
+    <string name="wallet_balance">Beursie Balans: R%1$s</string>
+    <string name="open_settings">Maak Instellings Oop</string>
+    <string name="sign_out">Teken Uit</string>
+    <string name="order_confirmation">Bestelling Bevestig</string>
+    <string name="order_confirmed_message">Jou bestelling is suksesvol geplaas!</string>
 </resources>
 

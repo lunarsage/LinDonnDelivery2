@@ -31,6 +31,7 @@ import com.example.lindonndelivery2.ui.theme.LinDonnDelivery2Theme
 import com.example.lindonndelivery2.ui.profile.ProfileScreen
 import com.example.lindonndelivery2.ui.settings.SettingsScreen
 import com.example.lindonndelivery2.util.LocaleHelper
+import androidx.compose.ui.platform.LocalContext
 
 /**
  * MainActivity - Entry point of the LinDonn Delivery 2 application
@@ -108,6 +109,9 @@ class MainActivity : ComponentActivity() {
         
         Log.d(TAG, "Locale applied: $language")
         
+        // Create notification channel for local notifications
+        com.example.lindonndelivery2.util.NotificationHelper.createNotificationChannel(this)
+        
         // Enable edge-to-edge display for modern Android design
         enableEdgeToEdge()
         
@@ -168,6 +172,7 @@ class MainActivity : ComponentActivity() {
                              * 
                              * Selected state is determined by current screen type
                              */
+                            val navContext = LocalContext.current
                             NavigationBar {
                                 // Home tab: selected when on Restaurants or Menu screen
                                 NavigationBarItem(
@@ -176,8 +181,8 @@ class MainActivity : ComponentActivity() {
                                         Log.d(TAG, "Navigation: Home tab clicked")
                                         screen = Screen.Restaurants 
                                     },
-                                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                                    label = { Text("Home") }
+                                    icon = { Icon(Icons.Default.Home, contentDescription = navContext.getString(com.example.lindonndelivery2.R.string.home)) },
+                                    label = { Text(navContext.getString(com.example.lindonndelivery2.R.string.home)) }
                                 )
                                 // Cart tab: selected when on Cart or Checkout screen
                                 NavigationBarItem(
@@ -186,8 +191,8 @@ class MainActivity : ComponentActivity() {
                                         Log.d(TAG, "Navigation: Cart tab clicked")
                                         screen = Screen.Cart 
                                     },
-                                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
-                                    label = { Text("Cart") }
+                                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = navContext.getString(com.example.lindonndelivery2.R.string.cart)) },
+                                    label = { Text(navContext.getString(com.example.lindonndelivery2.R.string.cart)) }
                                 )
                                 // Profile tab: selected when on Profile or Settings screen
                                 NavigationBarItem(
@@ -196,8 +201,8 @@ class MainActivity : ComponentActivity() {
                                         Log.d(TAG, "Navigation: Profile tab clicked")
                                         screen = Screen.Profile 
                                     },
-                                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                                    label = { Text("Profile") }
+                                    icon = { Icon(Icons.Default.Person, contentDescription = navContext.getString(com.example.lindonndelivery2.R.string.profile)) },
+                                    label = { Text(navContext.getString(com.example.lindonndelivery2.R.string.profile)) }
                                 )
                             }
                         }

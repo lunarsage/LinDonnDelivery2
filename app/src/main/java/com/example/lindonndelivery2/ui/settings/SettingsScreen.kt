@@ -151,6 +151,31 @@ fun SettingsScreen(onBack: () -> Unit) {
         ) {
             Text(saveText)
         }
+        
+        Spacer(Modifier.height(16.dp))
+        
+        // Sign Out Button
+        OutlinedButton(
+            onClick = {
+                Log.d(TAG, "Sign out clicked")
+                com.example.lindonndelivery2.data.SessionManager.clear()
+                // Restart activity to show login screen
+                val intent = Intent(context, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                (context as? android.app.Activity)?.finish()
+                context.startActivity(intent)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Text(
+                text = try {
+                    resources.getString(resources.getIdentifier("sign_out", "string", context.packageName))
+                } catch (e: Exception) { "Sign Out" }
+            )
+        }
     }
 }
 

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.example.lindonndelivery2.ui.theme.Grey300
 import com.example.lindonndelivery2.ui.theme.Grey700
 import com.example.lindonndelivery2.ui.theme.RustOrange
@@ -31,6 +32,7 @@ fun CartScreen(
     onBack: () -> Unit,
     onCheckout: () -> Unit
 ) {
+    val context = LocalContext.current
     val lines = CartStore.lines
     val promoState = remember { mutableStateOf("") }
     val subtotal = CartStore.total()
@@ -42,10 +44,10 @@ fun CartScreen(
     val delivery = CartStore.deliveryFee()
     val total = (subtotal - discount + delivery).coerceAtLeast(0.0)
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Cart", style = MaterialTheme.typography.headlineMedium)
+        Text(context.getString(com.example.lindonndelivery2.R.string.cart), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(12.dp))
         if (lines.isEmpty()) {
-            Text("Your cart is empty", style = MaterialTheme.typography.bodyMedium)
+            Text(context.getString(com.example.lindonndelivery2.R.string.cart_empty), style = MaterialTheme.typography.bodyMedium)
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.weight(1f)) {
                 items(lines) { l ->
@@ -70,7 +72,7 @@ fun CartScreen(
             TextField(
                 value = promoState.value,
                 onValueChange = { promoState.value = it },
-                label = { Text("Promo code (SAVE10 / LESS20)") },
+                label = { Text(context.getString(com.example.lindonndelivery2.R.string.promo_code)) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = Color.Black,
@@ -85,15 +87,15 @@ fun CartScreen(
                 ),
             )
             Spacer(Modifier.height(8.dp))
-            Text("Subtotal: R${String.format("%.2f", subtotal)}", style = MaterialTheme.typography.bodyMedium)
-            Text("Discount: -R${String.format("%.2f", discount)}", style = MaterialTheme.typography.bodyMedium)
-            Text("Delivery: R${String.format("%.2f", delivery)}", style = MaterialTheme.typography.bodyMedium)
-            Text("Total: R${String.format("%.2f", total)}", style = MaterialTheme.typography.titleMedium)
+            Text(context.getString(com.example.lindonndelivery2.R.string.subtotal, String.format("%.2f", subtotal)), style = MaterialTheme.typography.bodyMedium)
+            Text(context.getString(com.example.lindonndelivery2.R.string.discount, String.format("%.2f", discount)), style = MaterialTheme.typography.bodyMedium)
+            Text(context.getString(com.example.lindonndelivery2.R.string.delivery, String.format("%.2f", delivery)), style = MaterialTheme.typography.bodyMedium)
+            Text(context.getString(com.example.lindonndelivery2.R.string.total, String.format("%.2f", total)), style = MaterialTheme.typography.titleMedium)
         }
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = onBack) { Text("Back") }
-            Button(onClick = onCheckout, enabled = lines.isNotEmpty()) { Text("Proceed to Checkout") }
+            OutlinedButton(onClick = onBack) { Text(context.getString(com.example.lindonndelivery2.R.string.back)) }
+            Button(onClick = onCheckout, enabled = lines.isNotEmpty()) { Text(context.getString(com.example.lindonndelivery2.R.string.proceed_to_checkout)) }
         }
     }
 }

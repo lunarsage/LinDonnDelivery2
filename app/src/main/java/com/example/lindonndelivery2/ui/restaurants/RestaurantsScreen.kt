@@ -16,12 +16,14 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.example.lindonndelivery2.ui.theme.Grey300
 import com.example.lindonndelivery2.ui.theme.Grey700
 import com.example.lindonndelivery2.ui.theme.RustOrange
 
 @Composable
 fun RestaurantsScreen(onRestaurantClick: (Restaurant) -> Unit) {
+    val context = LocalContext.current
     val repo = remember { RestaurantRepository() }
     var items by remember { mutableStateOf<List<Restaurant>>(emptyList()) }
     var query by remember { mutableStateOf("") }
@@ -40,12 +42,12 @@ fun RestaurantsScreen(onRestaurantClick: (Restaurant) -> Unit) {
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Restaurants", style = MaterialTheme.typography.headlineMedium)
+        Text(context.getString(com.example.lindonndelivery2.R.string.restaurants), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
         TextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("Search restaurants or cuisines") },
+            label = { Text(context.getString(com.example.lindonndelivery2.R.string.search_restaurants)) },
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
@@ -61,7 +63,7 @@ fun RestaurantsScreen(onRestaurantClick: (Restaurant) -> Unit) {
         )
         Spacer(Modifier.height(12.dp))
         when {
-            loading -> Text("Loading...", style = MaterialTheme.typography.bodyMedium)
+            loading -> Text(context.getString(com.example.lindonndelivery2.R.string.loading), style = MaterialTheme.typography.bodyMedium)
             error != null -> Text(error!!, color = MaterialTheme.colorScheme.error)
             else -> {
                 val filtered = if (query.isBlank()) items else items.filter { r ->
