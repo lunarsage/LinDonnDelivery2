@@ -1,6 +1,8 @@
-# LinDonn Delivery 2
+# LinDonn Delivery
 
 ![App Logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+
+youtube link: https://youtube.com/shorts/L8MPLA2sWZs?si=nGX8QPZE6wNsD7Ko
 
 A modern food delivery Android application built with Jetpack Compose, featuring offline-first architecture, real-time push notifications, multi-language support, and seamless integration with Supabase backend.
 
