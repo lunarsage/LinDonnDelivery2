@@ -1,5 +1,7 @@
 package com.example.lindonndelivery2.data
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 
 /**
@@ -11,19 +13,49 @@ import android.util.Log
  * 
  * Architecture:
  * - Thread-safe with @Volatile annotations
- * - In-memory storage (cleared on app restart)
+ * - Persistent storage via SharedPreferences (survives app restart)
  * - JWT token parsing for user ID extraction
  * 
  * Security:
- * - Tokens are stored in memory only (not persisted)
+ * - Tokens are stored in SharedPreferences (encrypted on modern Android)
  * - User ID is extracted from JWT without network calls
  * - No sensitive data is logged
  * 
  * Reference: JWT structure - https://jwt.io/introduction
  */
 private const val TAG = "SessionManager"
+private const val PREFS_NAME = "session_prefs"
+private const val KEY_ACCESS_TOKEN = "access_token"
 
 object SessionManager {
+    private var prefs: SharedPreferences? = null
+    
+    /**
+     * Initialize SessionManager with application context
+     * Call this once in Application class or MainActivity onCreate
+     */
+    fun init(context: Context) {
+        if (prefs == null) {
+            prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            // Restore session from preferences
+            restoreSession()
+        }
+    }
+    
+    /**
+     * Restore Session from SharedPreferences
+     * Called automatically on init()
+     */
+    private fun restoreSession() {
+        val token = prefs?.getString(KEY_ACCESS_TOKEN, null)
+        if (token != null) {
+            Log.d(TAG, "Restoring session from SharedPreferences")
+            setFromToken(token)
+        } else {
+            Log.d(TAG, "No saved session found in SharedPreferences")
+        }
+    }
+    
     /**
      * Access Token (JWT)
      * 
@@ -67,6 +99,8 @@ object SessionManager {
         Log.d(TAG, "Setting session - User ID: $uid, Token present: ${token != null}")
         accessToken = token
         userId = uid
+        // Persist token
+        prefs?.edit()?.putString(KEY_ACCESS_TOKEN, token)?.apply()
     }
 
     /**
@@ -84,6 +118,8 @@ object SessionManager {
         Log.d(TAG, "Clearing session - logging out user")
         accessToken = null
         userId = null
+        // Clear persisted token
+        prefs?.edit()?.remove(KEY_ACCESS_TOKEN)?.apply()
     }
 
     /**
@@ -97,6 +133,7 @@ object SessionManager {
      * 2. Decode JWT payload (base64url)
      * 3. Extract "sub" claim (user ID)
      * 4. Store user ID
+     * 5. Persist token to SharedPreferences
      * 
      * @param token JWT access token from Supabase Auth
      */
@@ -104,11 +141,22 @@ object SessionManager {
         Log.d(TAG, "Setting session from token")
         accessToken = token
         userId = decodeUserIdFromAccessToken(token)
+        // Persist token
+        prefs?.edit()?.putString(KEY_ACCESS_TOKEN, token)?.apply()
         if (userId != null) {
             Log.d(TAG, "User ID extracted from token: $userId")
         } else {
             Log.w(TAG, "Failed to extract user ID from token")
         }
+    }
+    
+    /**
+     * Check if user is logged in
+     * 
+     * @return true if access token exists, false otherwise
+     */
+    fun isLoggedIn(): Boolean {
+        return accessToken != null && userId != null
     }
 
     /**

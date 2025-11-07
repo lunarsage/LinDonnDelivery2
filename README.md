@@ -261,6 +261,34 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## 🧪 Testing
 
+### Automated Testing (CI/CD)
+The project uses GitHub Actions for continuous integration:
+
+- **Unit Tests**: Runs on every push and pull request
+- **Build Verification**: Builds debug and release APKs
+- **Code Linting**: Checks code quality and style
+- **Instrumentation Tests**: Runs UI tests on Android emulator
+
+View test results and build artifacts in the [Actions](https://github.com/yourusername/LinDonnDelivery2/actions) tab.
+
+#### Running Tests Locally
+```bash
+# Run unit tests
+./gradlew test
+
+# Run instrumentation tests (requires connected device/emulator)
+./gradlew connectedAndroidTest
+
+# Run lint checks
+./gradlew lint
+
+# Build debug APK
+./gradlew assembleDebug
+
+# Build release APK
+./gradlew assembleRelease
+```
+
 ### Manual Testing
 1. **Authentication**: Test login, signup, password recovery
 2. **Offline Mode**: Test app functionality without internet

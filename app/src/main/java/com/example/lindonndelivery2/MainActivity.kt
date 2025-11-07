@@ -90,13 +90,23 @@ class MainActivity : ComponentActivity() {
          * 3. Set as default locale and update configuration
          * 4. This affects all string resources and locale-dependent formatting
          */
+        // Initialize SessionManager to restore persisted session
+        com.example.lindonndelivery2.data.SessionManager.init(this)
+        
         val language = LocaleHelper.getSavedLanguage(this)
         Log.d(TAG, "Loaded saved language preference: $language")
-        val config = resources.configuration
+        
+        // Apply locale - this needs to happen before setContent
         val locale = java.util.Locale(language)
         java.util.Locale.setDefault(locale)
+        
+        val config = resources.configuration
         config.setLocale(locale)
+        // Update configuration - deprecated but needed for compatibility
+        @Suppress("DEPRECATION")
         resources.updateConfiguration(config, resources.displayMetrics)
+        
+        Log.d(TAG, "Locale applied: $language")
         
         // Enable edge-to-edge display for modern Android design
         enableEdgeToEdge()
@@ -112,8 +122,11 @@ class MainActivity : ComponentActivity() {
          */
         setContent {
             LinDonnDelivery2Theme {
-                // Authentication state: false = show login, true = show main app
-                var authed by remember { mutableStateOf(false) }
+                // Authentication state: check if user is already logged in (restored from SharedPreferences)
+                var authed by remember { 
+                    mutableStateOf(com.example.lindonndelivery2.data.SessionManager.isLoggedIn()) 
+                }
+                Log.d(TAG, "Initial auth state: $authed (User ID: ${com.example.lindonndelivery2.data.SessionManager.userId})")
                 
                 // Current screen state: tracks which screen is currently displayed
                 // Default to Restaurants screen when app starts

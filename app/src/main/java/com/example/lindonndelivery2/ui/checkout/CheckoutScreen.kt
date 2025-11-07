@@ -112,6 +112,9 @@ fun CheckoutScreen(
                                     note = l.note
                                 )
                             }
+                            android.util.Log.d("CheckoutScreen", "Creating order for user: $uid")
+                            android.util.Log.d("CheckoutScreen", "Order items: ${items.size}, Total: $total")
+                            
                             val created = orders.create(
                                 OrderCreate(
                                     uid = uid,
@@ -122,6 +125,11 @@ fun CheckoutScreen(
                                 )
                             )
                             val inserted = created.firstOrNull() ?: throw IllegalStateException("No order returned")
+                            android.util.Log.d("CheckoutScreen", "Order created successfully: ${inserted.id}")
+                            
+                            // Verify FCM token is stored (notification trigger will use it)
+                            com.example.lindonndelivery2.data.notifications.FcmTokenManager.getAndStoreToken()
+                            
                             CartStore.clear()
                             onOrderPlaced(inserted.id)
                         } catch (t: Throwable) {

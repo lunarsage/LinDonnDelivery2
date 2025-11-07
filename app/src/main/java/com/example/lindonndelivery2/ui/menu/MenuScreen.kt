@@ -97,8 +97,10 @@ private fun CategoryHeader(title: String, expanded: Boolean, onToggle: () -> Uni
 private fun MenuRow(m: MenuItem) {
     Column(Modifier.fillMaxWidth()) {
         Text(m.name, style = MaterialTheme.typography.titleMedium)
+        if (m.description != null) {
         Spacer(Modifier.height(2.dp))
         Text(m.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+        }
         Spacer(Modifier.height(6.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("R${String.format("%.2f", m.price)}", style = MaterialTheme.typography.bodyMedium)
