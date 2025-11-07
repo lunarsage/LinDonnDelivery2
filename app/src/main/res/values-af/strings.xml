@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LinDonn Delivery 2</string>
+    <string name="app_name">LinDonn Delivery</string>
     <string name="sign_in">Teken In</string>
     <string name="sign_up">Registreer</string>
     <string name="sign_in_with_google">Teken In met Google</string>

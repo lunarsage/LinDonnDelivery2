@@ -78,6 +78,7 @@ dependencies {
     
     // Google Sign-In for SSO
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     
     // Room Database for offline mode
     val roomVersion = "2.6.1"
