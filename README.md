@@ -283,13 +283,6 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 - [ ] Settings management
 - [ ] Offline synchronization
 
-## 📚 Documentation
-
-- [BACKEND_SETUP_GUIDE.md](BACKEND_SETUP_GUIDE.md) - Comprehensive backend setup guide
-- [BACKEND_ARCHITECTURE.md](BACKEND_ARCHITECTURE.md) - Backend architecture overview
-- [GOOGLE_OAUTH_CONSENT_SCREEN.md](GOOGLE_OAUTH_CONSENT_SCREEN.md) - Google OAuth setup
-- [GET_SHA1_FINGERPRINT.md](GET_SHA1_FINGERPRINT.md) - SHA-1 fingerprint guide
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -303,10 +296,6 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 - Use meaningful variable and function names
 - Add comments for complex logic
 - Maintain consistent formatting
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👥 Authors
 
@@ -327,6 +316,4 @@ For issues, questions, or suggestions:
 - Check existing documentation
 - Review backend setup guide
 
----
 
-**Built with ❤️ using Jetpack Compose and Supabase**
