@@ -8,7 +8,7 @@ A modern food delivery Android application built with Jetpack Compose, featuring
 
 ## 📱 App Purpose
 
-LinDonn Delivery 2 is a comprehensive food delivery platform designed to connect users with local restaurants in South Africa. The app provides a seamless experience for browsing restaurants, ordering food, tracking deliveries, and managing user preferences—all while working offline and syncing when connectivity is restored.
+LinDonn Delivery is a comprehensive food delivery platform designed to connect users with local restaurants in South Africa. The app provides a seamless experience for browsing restaurants, ordering food, tracking deliveries, and managing user preferences—all while working offline and syncing when connectivity is restored.
 
 ### Key Objectives
 - **Accessibility**: Multi-language support (English, Afrikaans, isiZulu) for South African users
