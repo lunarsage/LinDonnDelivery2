@@ -4,8 +4,8 @@ data class MenuItem(
     val id: String,
     val restaurant_id: String,
     val name: String,
-    val description: String,
+    val description: String? = null,
     val price: Double,
-    val image_url: String?,
-    val category: String?
+    val image_url: String? = null,
+    val category: String? = null
 )

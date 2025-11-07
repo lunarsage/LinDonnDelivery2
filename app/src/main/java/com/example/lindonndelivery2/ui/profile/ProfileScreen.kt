@@ -20,9 +20,9 @@ import com.example.lindonndelivery2.ui.theme.RustOrange
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(onNavigateToSettings: (() -> Unit)? = null) {
     var tab by remember { mutableStateOf(0) }
-    val tabs = listOf("Account", "Orders", "Loyalty")
+    val tabs = listOf("Account", "Orders", "Loyalty", "Settings")
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text("Profile", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
@@ -36,6 +36,7 @@ fun ProfileScreen() {
             0 -> AccountTab()
             1 -> OrdersTab()
             2 -> LoyaltyTab()
+            3 -> SettingsTab(onNavigateToSettings = onNavigateToSettings)
         }
     }
 }
@@ -164,5 +165,20 @@ private fun LoyaltyTab() {
         Spacer(Modifier.height(4.dp))
         Text("Wallet Balance: R${String.format("%.2f", balance)}", style = MaterialTheme.typography.bodyMedium)
         if (error != null) { Spacer(Modifier.height(6.dp)); Text(error!!, color = MaterialTheme.colorScheme.error) }
+    }
+}
+
+@Composable
+private fun SettingsTab(onNavigateToSettings: (() -> Unit)?) {
+    Column(Modifier.fillMaxWidth()) {
+        Text("Settings", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(12.dp))
+        if (onNavigateToSettings != null) {
+            Button(onClick = onNavigateToSettings) {
+                Text("Open Settings")
+            }
+        } else {
+            Text("Settings are available in the Profile tab", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }

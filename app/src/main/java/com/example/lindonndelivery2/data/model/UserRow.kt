@@ -5,5 +5,6 @@ data class UserRow(
     val email: String,
     val wallet_balance: Double? = 0.0,
     val points: Int? = 0,
-    val default_address: String? = null
+    val default_address: String? = null,
+    val fcm_token: String? = null
 )

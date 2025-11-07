@@ -28,6 +28,8 @@ import com.example.lindonndelivery2.ui.checkout.CheckoutScreen
 import com.example.lindonndelivery2.ui.tracking.TrackingScreen
 import com.example.lindonndelivery2.ui.theme.LinDonnDelivery2Theme
 import com.example.lindonndelivery2.ui.profile.ProfileScreen
+import com.example.lindonndelivery2.ui.settings.SettingsScreen
+import com.example.lindonndelivery2.util.LocaleHelper
 
 // App entry point. Hosts simple in-app navigation using a sealed Screen and a Compose Scaffold
 // with a bottom NavigationBar. We keep navigation state in memory for this demo.
@@ -38,11 +40,21 @@ sealed class Screen {
     data object Checkout: Screen()
     data class Tracking(val orderId: String): Screen()
     data object Profile: Screen()
+    data object Settings: Screen()
 }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Apply saved language
+        val language = LocaleHelper.getSavedLanguage(this)
+        val config = resources.configuration
+        val locale = java.util.Locale(language)
+        java.util.Locale.setDefault(locale)
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        
         enableEdgeToEdge()
         setContent {
             LinDonnDelivery2Theme {
@@ -103,7 +115,12 @@ class MainActivity : ComponentActivity() {
                                 is Screen.Tracking -> TrackingScreen(orderId = s.orderId) {
                                     screen = Screen.Restaurants
                                 }
-                                is Screen.Profile -> ProfileScreen()
+                                is Screen.Profile -> ProfileScreen(onNavigateToSettings = {
+                                    screen = Screen.Settings
+                                })
+                                is Screen.Settings -> SettingsScreen(onBack = {
+                                    screen = Screen.Profile
+                                })
                             }
                         }
                     }

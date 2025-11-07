@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">LinDonn Delivery 2</string>
+    <string name="sign_in">Ngena</string>
+    <string name="sign_up">Bhalisa</string>
+    <string name="sign_in_with_google">Ngena nge-Google</string>
+    <string name="email">I-imeyili</string>
+    <string name="password">Iphasiwedi</string>
+    <string name="forgot_password">Ukhohlwe iphasiwedi?</string>
+    <string name="home">Ikhaya</string>
+    <string name="cart">Inqola</string>
+    <string name="profile">Iphrofayela</string>
+    <string name="restaurants">Izindawo zokudlela</string>
+    <string name="menu">Imenyu</string>
+    <string name="checkout">Khokha</string>
+    <string name="tracking">Ukulandelela</string>
+    <string name="account">I-akhawunti</string>
+    <string name="orders">Ama-oda</string>
+    <string name="loyalty">Ubuqiniso</string>
+    <string name="settings">Izilungiselelo</string>
+    <string name="language">Ulimi</string>
+    <string name="notifications">Izaziso</string>
+    <string name="save">Gcina</string>
+    <string name="loading">Iyalayisha…</string>
+    <string name="error">Iphutha</string>
+    <string name="offline">Akukho intanethi</string>
+    <string name="online">Ku-intanethi</string>
+    <string name="sync">Hlanganisa</string>
+</resources>
+

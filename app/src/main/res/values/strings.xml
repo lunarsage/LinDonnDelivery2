@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">LinDonn Delivery 2</string>
+    <string name="default_web_client_id">830524740915-pk3a7sd61v2r7p715cm2sqolmfesj87r.apps.googleusercontent.com</string>
+    
+    <!-- Common strings -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="home">Home</string>
+    <string name="cart">Cart</string>
+    <string name="profile">Profile</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="menu">Menu</string>
+    <string name="checkout">Checkout</string>
+    <string name="tracking">Tracking</string>
+    <string name="account">Account</string>
+    <string name="orders">Orders</string>
+    <string name="loyalty">Loyalty</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="notifications">Notifications</string>
+    <string name="save">Save</string>
+    <string name="loading">Loading…</string>
+    <string name="error">Error</string>
+    <string name="offline">Offline</string>
+    <string name="online">Online</string>
+    <string name="sync">Sync</string>
 </resources>

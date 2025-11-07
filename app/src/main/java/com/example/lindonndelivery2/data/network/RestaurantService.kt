@@ -6,4 +6,7 @@ import retrofit2.http.GET
 interface RestaurantService {
     @GET("restaurants?select=*")
     suspend fun getRestaurants(): List<Restaurant>
+    
+    @GET("restaurants?select=*")
+    suspend fun list(): List<Restaurant>
 }

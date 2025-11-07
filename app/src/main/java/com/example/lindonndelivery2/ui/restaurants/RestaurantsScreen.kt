@@ -75,7 +75,7 @@ fun RestaurantsScreen(onRestaurantClick: (Restaurant) -> Unit) {
                             Column(Modifier.padding(16.dp)) {
                                 Text(r.name, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                                 Spacer(Modifier.height(4.dp))
-                                Text("${r.cuisine} • ${r.avg_minutes}m • R${r.delivery_fee} • ★${r.rating}", style = MaterialTheme.typography.bodyMedium)
+                                Text("${r.cuisine} • ${r.avg_minutes?.let { "${it}m" } ?: "N/A"} • R${r.delivery_fee ?: 0.0} • ★${r.rating ?: 0.0}", style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }

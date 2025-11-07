@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">LinDonn Delivery 2</string>
+    <string name="sign_in">Teken In</string>
+    <string name="sign_up">Registreer</string>
+    <string name="sign_in_with_google">Teken In met Google</string>
+    <string name="email">E-pos</string>
+    <string name="password">Wagwoord</string>
+    <string name="forgot_password">Wagwoord vergeet?</string>
+    <string name="home">Tuis</string>
+    <string name="cart">Mandjie</string>
+    <string name="profile">Profiel</string>
+    <string name="restaurants">Restaurante</string>
+    <string name="menu">Spyskaart</string>
+    <string name="checkout">Betaal</string>
+    <string name="tracking">Volg</string>
+    <string name="account">Rekening</string>
+    <string name="orders">Bestellings</string>
+    <string name="loyalty">Lojaliteit</string>
+    <string name="settings">Instellings</string>
+    <string name="language">Taal</string>
+    <string name="notifications">Kennisgewings</string>
+    <string name="save">Stoor</string>
+    <string name="loading">Laai…</string>
+    <string name="error">Fout</string>
+    <string name="offline">Vanlyn</string>
+    <string name="online">Aanlyn</string>
+    <string name="sync">Sinkroniseer</string>
+</resources>
+

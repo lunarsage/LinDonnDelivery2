@@ -25,3 +25,14 @@ captures/
 outputs/
 *.apk
 *.aab
+
+# Firebase
+google-services.json
+
+# Supabase secrets
+**/supabase/.env
+**/supabase/.env.local
+
+# API keys (if stored in separate files)
+**/secrets.properties
+**/local.properties
